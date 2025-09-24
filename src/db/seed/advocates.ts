@@ -1,5 +1,5 @@
 import db from "..";
-import { advocates } from "../schema";
+import { advocates } from "../schema/advocates";
 
 const specialties = [
   "Bipolar",

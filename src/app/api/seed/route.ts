@@ -1,5 +1,5 @@
 import db from "../../../db";
-import { advocates } from "../../../db/schema";
+import { advocates } from "../../../db/schema/advocates";
 import { advocateData } from "../../../db/seed/advocates";
 
 export async function POST() {

@@ -1,12 +1,13 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ChangeEvent } from "react";
 import { getData } from "./requests/getData";
 import { AdvocatesResponse } from "@/types/AdvocatesResponse";
 
 export default function Home() {
   const [advocates, setAdvocates] = useState<AdvocatesResponse>([]);
   const [filteredAdvocates, setFilteredAdvocates] = useState<AdvocatesResponse>([]);
+  const [searchTerm, setSearchTerm] = useState<string>("");
 
   useEffect(() => {
     console.log("fetching advocates...");
@@ -16,7 +17,7 @@ export default function Home() {
     });
   }, []);
 
-  const onChange = (e) => {
+  const onChange = (e: ChangeEvent<HTMLInputElement>) => {
     const searchTerm = e.target.value;
 
     document.getElementById("search-term").innerHTML = searchTerm;
@@ -29,7 +30,7 @@ export default function Home() {
         advocate.city.includes(searchTerm) ||
         advocate.degree.includes(searchTerm) ||
         advocate.specialties.includes(searchTerm) ||
-        advocate.yearsOfExperience.includes(searchTerm)
+        advocate.yearsOfExperience.toString() === searchTerm
       );
     });
 

@@ -15,6 +15,13 @@
       "when": 1758684147933,
       "tag": "0001_add-pg-trgm",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1758736994200,
+      "tag": "0002_advocates-search-field",
+      "breakpoints": true
     }
   ]
 }

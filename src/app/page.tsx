@@ -19,8 +19,7 @@ export default function Home() {
 
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
     const searchTerm = e.target.value;
-
-    document.getElementById("search-term").innerHTML = searchTerm;
+    setSearchTerm(searchTerm);
 
     console.log("filtering advocates...");
     const filteredAdvocates = advocates.filter((advocate) => {
@@ -50,7 +49,7 @@ export default function Home() {
       <div>
         <p>Search</p>
         <p>
-          Searching for: <span id="search-term"></span>
+          Searching for: <span id="search-term">{searchTerm}</span>
         </p>
         <input style={{ border: "1px solid black" }} onChange={onChange} />
         <button onClick={onClick}>Reset Search</button>

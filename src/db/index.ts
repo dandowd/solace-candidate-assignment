@@ -1,12 +1,10 @@
 import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
-import getconfig from "next/config";
-
-const { serverRuntimeConfig: appConfig } = getconfig();
+import dbConfig from "./dbConfig";
 
 const setup = () => {
   // for query purposes
-  const queryClient = postgres(appConfig.databaseUrl);
+  const queryClient = postgres(dbConfig.databaseUrl);
   const db = drizzle(queryClient);
   return db;
 };

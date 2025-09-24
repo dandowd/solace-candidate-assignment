@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useState, type ChangeEvent } from "react";
+import { useEffect, useMemo, useState, type ChangeEvent } from "react";
+import debounce from "lodash.debounce";
 import { getData } from "./requests/getData";
 import { AdvocatesResponse } from "@/types/AdvocatesResponse";
 
@@ -17,33 +18,41 @@ export default function Home() {
     });
   }, []);
 
+  // Debounced server search function (1 second)
+  const debouncedSearch = useMemo(
+    () =>
+      debounce(async (term: string) => {
+        try {
+          const response = await getData<AdvocatesResponse>(`/api/advocates?search=${encodeURIComponent(term)}`);
+          setFilteredAdvocates(response);
+        } catch (err) {
+          console.error("Failed to fetch advocates:", err);
+        }
+      }, 1000),
+    []
+  );
+
+  useEffect(() => {
+    // Cleanup debounced calls on unmount
+    return () => debouncedSearch.cancel();
+  }, [debouncedSearch]);
+
   const onSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setSearchTerm(value);
 
-    const term = value.trim().toLowerCase();
+    const term = value.trim();
     if (!term) {
+      debouncedSearch.cancel();
       setFilteredAdvocates(advocates);
       return;
     }
 
-    console.log("filtering advocates...");
-    const filteredAdvocates = advocates.filter((advocate) => {
-      return (
-        advocate.firstName.includes(searchTerm) ||
-        advocate.lastName.includes(searchTerm) ||
-        advocate.city.includes(searchTerm) ||
-        advocate.degree.includes(searchTerm) ||
-        advocate.specialties.includes(searchTerm) ||
-        advocate.yearsOfExperience.toString() === searchTerm
-      );
-    });
-
-    setFilteredAdvocates(filteredAdvocates);
+    debouncedSearch(term);
   };
 
   const onClickReset = () => {
-    console.log(advocates);
+    debouncedSearch.cancel();
     setFilteredAdvocates(advocates);
     setSearchTerm("");
   };

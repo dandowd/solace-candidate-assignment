@@ -10,6 +10,7 @@ export const getData = async <T>(url: string): Promise<T> => {
     const contentType = response.headers.get("content-type") ?? "";
 
     if (!contentType.includes("application/json")) {
+        // Pop a toast error message or redirect to an error page in a real app
         throw new Error(`Unexpected content type: ${contentType || "unknown"}`);
     }
 
@@ -21,6 +22,7 @@ export const getData = async <T>(url: string): Promise<T> => {
     }
 
     if ("error" in body) {
+        // Pop a toast error message or redirect to an error page in a real app
         throw new Error(body.error);
     }
 

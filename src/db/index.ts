@@ -1,18 +1,12 @@
 import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
+import getconfig from "next/config";
+
+const { serverRuntimeConfig: appConfig } = getconfig();
 
 const setup = () => {
-  if (!process.env.DATABASE_URL) {
-    console.error("DATABASE_URL is not set");
-    return {
-      select: () => ({
-        from: () => [],
-      }),
-    };
-  }
-
   // for query purposes
-  const queryClient = postgres(process.env.DATABASE_URL);
+  const queryClient = postgres(appConfig.databaseUrl);
   const db = drizzle(queryClient);
   return db;
 };

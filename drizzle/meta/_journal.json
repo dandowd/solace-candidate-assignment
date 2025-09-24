@@ -8,6 +8,13 @@
       "when": 1758671744137,
       "tag": "0000_wakeful_randall_flagg",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1758684147933,
+      "tag": "0001_add-pg-trgm",
+      "breakpoints": true
     }
   ]
 }

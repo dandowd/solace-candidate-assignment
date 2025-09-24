@@ -1,6 +1,3 @@
-import db from "..";
-import { advocates } from "../schema/advocates";
-
 const specialties = [
   "Bipolar",
   "LGBTQ",

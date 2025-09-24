@@ -17,9 +17,15 @@ export default function Home() {
     });
   }, []);
 
-  const onChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const searchTerm = e.target.value;
-    setSearchTerm(searchTerm);
+  const onSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setSearchTerm(value);
+
+    const term = value.trim().toLowerCase();
+    if (!term) {
+      setFilteredAdvocates(advocates);
+      return;
+    }
 
     console.log("filtering advocates...");
     const filteredAdvocates = advocates.filter((advocate) => {
@@ -36,9 +42,10 @@ export default function Home() {
     setFilteredAdvocates(filteredAdvocates);
   };
 
-  const onClick = () => {
+  const onClickReset = () => {
     console.log(advocates);
     setFilteredAdvocates(advocates);
+    setSearchTerm("");
   };
 
   return (
@@ -47,12 +54,11 @@ export default function Home() {
       <br />
       <br />
       <div>
-        <p>Search</p>
         <p>
           Searching for: <span id="search-term">{searchTerm}</span>
         </p>
-        <input style={{ border: "1px solid black" }} onChange={onChange} />
-        <button onClick={onClick}>Reset Search</button>
+        <input style={{ border: "1px solid black" }} onChange={onSearchChange} value={searchTerm} />
+        <button onClick={onClickReset}>Reset Search</button>
       </div>
       <br />
       <br />

@@ -5,9 +5,20 @@ import debounce from "lodash.debounce";
 import { getData } from "./requests/getData";
 import { AdvocatesResponse } from "@/types/AdvocatesResponse";
 
+export function formatPhone(phoneNbr: number) {
+  const phoneStr = phoneNbr.toString()
+  const areaCode = phoneStr.slice(0,3)
+  const first = phoneStr.slice(3,6)
+  const end = phoneStr.slice(6);
+
+  return `(${areaCode})-${first}-${end}`
+}
+
 export default function Home() {
   const [advocates, setAdvocates] = useState<AdvocatesResponse>([]);
   const [filteredAdvocates, setFilteredAdvocates] = useState<AdvocatesResponse>([]);
+  const [orderedColumn, setOrderedColumn] = useState("id")
+  const [orderDirection, setOrderedDirection] = useState("asc")
   const [searchTerm, setSearchTerm] = useState<string>("");
 
   useEffect(() => {
@@ -18,17 +29,20 @@ export default function Home() {
     });
   }, []);
 
-  // Debounced server search function (1 second)
-  const debouncedSearch = useMemo(
-    () =>
-      debounce(async (term: string) => {
+  const search = async (term: string, orderBy?: string, direction?: string) => {
         try {
-          const response = await getData<AdvocatesResponse>(`/api/advocates?search=${encodeURIComponent(term)}`);
+          const searchParam = term ? `&search=${encodeURIComponent(term)}` : '';
+          const response = await getData<AdvocatesResponse>(`/api/advocates?orderBy=${orderBy}&direction=${direction}${searchParam}`);
           setFilteredAdvocates(response);
         } catch (err) {
           console.error("Failed to fetch advocates:", err);
         }
-      }, 1000),
+      } 
+  
+  // Debounced server search function (1 second)
+  const debouncedSearch = useMemo(
+    () =>
+      debounce(search, 1000),
     []
   );
 
@@ -48,8 +62,22 @@ export default function Home() {
       return;
     }
 
-    debouncedSearch(term);
+    debouncedSearch(term, orderedColumn, orderDirection);
   };
+
+  const onSelectOrderBy = (column: string) => {
+    if (column === orderedColumn) {
+      if (orderDirection === 'asc') {
+        setOrderedDirection('desc')
+      } else {
+        setOrderedDirection('asc')
+      }
+    } else {
+      setOrderedColumn(column)
+    }
+    
+    search(searchTerm, orderedColumn, orderDirection)
+  }
 
   const onClickReset = () => {
     debouncedSearch.cancel();
@@ -92,7 +120,7 @@ export default function Home() {
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50 sticky top-0 z-10">
                 <tr>
-                  <th scope="col" className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600">First Name</th>
+                  <th onClick={() => onSelectOrderBy('firstName')} scope="col" className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600"><span>First Name</span><span>^</span></th>
                   <th scope="col" className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600">Last Name</th>
                   <th scope="col" className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600">City</th>
                   <th scope="col" className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600">Degree</th>
@@ -117,7 +145,7 @@ export default function Home() {
                         </div>
                       </td>
                       <td className="whitespace-nowrap px-4 py-3 text-sm text-gray-900">{advocate.yearsOfExperience}</td>
-                      <td className="whitespace-nowrap px-4 py-3 text-sm text-gray-900">{advocate.phoneNumber}</td>
+                      <td className="whitespace-nowrap px-4 py-3 text-sm text-gray-900">{formatPhone(advocate.phoneNumber)}</td>
                     </tr>
                   );
                 })}

@@ -6,45 +6,45 @@ import { getData } from "./requests/getData";
 import { AdvocatesResponse } from "@/types/AdvocatesResponse";
 
 export function formatPhone(phoneNbr: number) {
-  const phoneStr = phoneNbr.toString()
-  const areaCode = phoneStr.slice(0,3)
-  const first = phoneStr.slice(3,6)
+  const phoneStr = phoneNbr.toString();
+  const areaCode = phoneStr.slice(0, 3);
+  const first = phoneStr.slice(3, 6);
   const end = phoneStr.slice(6);
 
-  return `(${areaCode})-${first}-${end}`
+  return `(${areaCode})-${first}-${end}`;
 }
 
 export default function Home() {
   const [advocates, setAdvocates] = useState<AdvocatesResponse>([]);
-  const [filteredAdvocates, setFilteredAdvocates] = useState<AdvocatesResponse>([]);
-  const [orderedColumn, setOrderedColumn] = useState("id")
-  const [orderDirection, setOrderedDirection] = useState("asc")
+  const [filteredAdvocates, setFilteredAdvocates] = useState<AdvocatesResponse>(
+    [],
+  );
+  const [orderedColumn, setOrderedColumn] = useState("id");
+  const [orderDirection, setOrderedDirection] = useState("asc");
   const [searchTerm, setSearchTerm] = useState<string>("");
 
   useEffect(() => {
     console.log("fetching advocates...");
     getData<AdvocatesResponse>("/api/advocates").then((response) => {
-        setAdvocates(response);
-        setFilteredAdvocates(response);
+      setAdvocates(response);
+      setFilteredAdvocates(response);
     });
   }, []);
 
   const search = async (term: string, orderBy?: string, direction?: string) => {
-        try {
-          const searchParam = term ? `&search=${encodeURIComponent(term)}` : '';
-          const response = await getData<AdvocatesResponse>(`/api/advocates?orderBy=${orderBy}&direction=${direction}${searchParam}`);
-          setFilteredAdvocates(response);
-        } catch (err) {
-          console.error("Failed to fetch advocates:", err);
-        }
-      } 
-  
+    try {
+      const searchParam = term ? `&search=${encodeURIComponent(term)}` : "";
+      const response = await getData<AdvocatesResponse>(
+        `/api/advocates?orderBy=${orderBy}&direction=${direction}${searchParam}`,
+      );
+      setFilteredAdvocates(response);
+    } catch (err) {
+      console.error("Failed to fetch advocates:", err);
+    }
+  };
+
   // Debounced server search function (1 second)
-  const debouncedSearch = useMemo(
-    () =>
-      debounce(search, 1000),
-    []
-  );
+  const debouncedSearch = useMemo(() => debounce(search, 1000), []);
 
   useEffect(() => {
     // Cleanup debounced calls on unmount
@@ -67,17 +67,17 @@ export default function Home() {
 
   const onSelectOrderBy = (column: string) => {
     if (column === orderedColumn) {
-      if (orderDirection === 'asc') {
-        setOrderedDirection('desc')
+      if (orderDirection === "asc") {
+        setOrderedDirection("desc");
       } else {
-        setOrderedDirection('asc')
+        setOrderedDirection("asc");
       }
     } else {
-      setOrderedColumn(column)
+      setOrderedColumn(column);
     }
-    
-    search(searchTerm, orderedColumn, orderDirection)
-  }
+
+    search(searchTerm, orderedColumn, orderDirection);
+  };
 
   const onClickReset = () => {
     debouncedSearch.cancel();
@@ -89,15 +89,22 @@ export default function Home() {
     <main className="min-h-screen bg-gray-50 py-10">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <header className="mb-8">
-          <h1 className="text-3xl font-bold tracking-tight text-gray-900">Solace Advocates</h1>
+          <h1 className="text-3xl font-bold tracking-tight text-gray-900">
+            Solace Advocates
+          </h1>
           <p className="mt-2 text-sm text-gray-600">
-            Searching for: <span id="search-term" className="font-medium text-gray-900">{searchTerm}</span>
+            Searching for:{" "}
+            <span id="search-term" className="font-medium text-gray-900">
+              {searchTerm}
+            </span>
           </p>
         </header>
 
         <div className="mb-8">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-            <label htmlFor="search" className="sr-only">Search advocates</label>
+            <label htmlFor="search" className="sr-only">
+              Search advocates
+            </label>
             <input
               id="search"
               placeholder="Search by name, city, degree, or specialty..."
@@ -120,32 +127,89 @@ export default function Home() {
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50 sticky top-0 z-10">
                 <tr>
-                  <th onClick={() => onSelectOrderBy('firstName')} scope="col" className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600"><span>First Name</span><span>^</span></th>
-                  <th scope="col" className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600">Last Name</th>
-                  <th scope="col" className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600">City</th>
-                  <th scope="col" className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600">Degree</th>
-                  <th scope="col" className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600">Specialties</th>
-                  <th scope="col" className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600">Years of Experience</th>
-                  <th scope="col" className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600">Phone Number</th>
+                  <th
+                    onClick={() => onSelectOrderBy("firstName")}
+                    scope="col"
+                    className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600"
+                  >
+                    <span>First Name</span>
+                    <span>^</span>
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600"
+                  >
+                    Last Name
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600"
+                  >
+                    City
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600"
+                  >
+                    Degree
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600"
+                  >
+                    Specialties
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600"
+                  >
+                    Years of Experience
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600"
+                  >
+                    Phone Number
+                  </th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100">
                 {filteredAdvocates.map((advocate, idx) => {
                   return (
-                    <tr key={advocate.id} className={idx % 2 === 0 ? "bg-white" : "bg-gray-50"}>
-                      <td className="whitespace-nowrap px-4 py-3 text-sm text-gray-900">{advocate.firstName}</td>
-                      <td className="whitespace-nowrap px-4 py-3 text-sm text-gray-900">{advocate.lastName}</td>
-                      <td className="whitespace-nowrap px-4 py-3 text-sm text-gray-900">{advocate.city}</td>
-                      <td className="whitespace-nowrap px-4 py-3 text-sm text-gray-900">{advocate.degree}</td>
+                    <tr
+                      key={advocate.id}
+                      className={idx % 2 === 0 ? "bg-white" : "bg-gray-50"}
+                    >
+                      <td className="whitespace-nowrap px-4 py-3 text-sm text-gray-900">
+                        {advocate.firstName}
+                      </td>
+                      <td className="whitespace-nowrap px-4 py-3 text-sm text-gray-900">
+                        {advocate.lastName}
+                      </td>
+                      <td className="whitespace-nowrap px-4 py-3 text-sm text-gray-900">
+                        {advocate.city}
+                      </td>
+                      <td className="whitespace-nowrap px-4 py-3 text-sm text-gray-900">
+                        {advocate.degree}
+                      </td>
                       <td className="px-4 py-3 text-sm text-gray-900">
                         <div className="flex flex-wrap gap-2">
                           {advocate.specialties.map((s) => (
-                            <span key={s} className="inline-flex items-center rounded-full bg-indigo-50 px-2.5 py-1 text-xs font-medium text-indigo-700 ring-1 ring-inset ring-indigo-200">{s}</span>
+                            <span
+                              key={s}
+                              className="inline-flex items-center rounded-full bg-indigo-50 px-2.5 py-1 text-xs font-medium text-indigo-700 ring-1 ring-inset ring-indigo-200"
+                            >
+                              {s}
+                            </span>
                           ))}
                         </div>
                       </td>
-                      <td className="whitespace-nowrap px-4 py-3 text-sm text-gray-900">{advocate.yearsOfExperience}</td>
-                      <td className="whitespace-nowrap px-4 py-3 text-sm text-gray-900">{formatPhone(advocate.phoneNumber)}</td>
+                      <td className="whitespace-nowrap px-4 py-3 text-sm text-gray-900">
+                        {advocate.yearsOfExperience}
+                      </td>
+                      <td className="whitespace-nowrap px-4 py-3 text-sm text-gray-900">
+                        {formatPhone(advocate.phoneNumber)}
+                      </td>
                     </tr>
                   );
                 })}

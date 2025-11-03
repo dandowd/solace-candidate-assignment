@@ -6,29 +6,29 @@ import { ApiGetResponse, ApiErrorResponse } from "@/types/ApiResponse";
  * @returns The data from the API response
  */
 export const getData = async <T>(url: string): Promise<T> => {
-    const response = await fetch(url);
-    const contentType = response.headers.get("content-type") ?? "";
+  const response = await fetch(url);
+  const contentType = response.headers.get("content-type") ?? "";
 
-    if (!contentType.includes("application/json")) {
-        // Pop a toast error message or redirect to an error page in a real app
-        throw new Error(`Unexpected content type: ${contentType || "unknown"}`);
-    }
+  if (!contentType.includes("application/json")) {
+    // Pop a toast error message or redirect to an error page in a real app
+    throw new Error(`Unexpected content type: ${contentType || "unknown"}`);
+  }
 
-    const body: ApiGetResponse<T> = await response.json();
+  const body: ApiGetResponse<T> = await response.json();
 
-    if (!response.ok) {
-        const maybeError = (body as ApiErrorResponse).error;
-        throw new Error(maybeError || response.statusText);
-    }
+  if (!response.ok) {
+    const maybeError = (body as ApiErrorResponse).error;
+    throw new Error(maybeError || response.statusText);
+  }
 
-    if ("error" in body) {
-        // Pop a toast error message or redirect to an error page in a real app
-        throw new Error(body.error);
-    }
+  if ("error" in body) {
+    // Pop a toast error message or redirect to an error page in a real app
+    throw new Error(body.error);
+  }
 
-    if ("data" in body) {
-        return body.data;
-    }
+  if ("data" in body) {
+    return body.data;
+  }
 
-    throw new Error("No data in response");
-}
+  throw new Error("No data in response");
+};

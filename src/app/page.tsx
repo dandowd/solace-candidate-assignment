@@ -25,7 +25,9 @@ export default function Home() {
 
   useEffect(() => {
     console.log("fetching advocates...");
-    getData<AdvocatesResponse>("/api/advocates").then((response) => {
+    getData<AdvocatesResponse>(
+      `/api/advocates?orderBy=${orderedColumn}&direction=${orderDirection}`,
+    ).then((response) => {
       setAdvocates(response);
       setFilteredAdvocates(response);
     });
@@ -75,9 +77,11 @@ export default function Home() {
     } else {
       setOrderedColumn(column);
     }
-
-    search(searchTerm, orderedColumn, orderDirection);
   };
+
+  useEffect(() => {
+    search(searchTerm, orderedColumn, orderDirection);
+  }, [searchTerm, orderedColumn, orderDirection]);
 
   const onClickReset = () => {
     debouncedSearch.cancel();

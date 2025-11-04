@@ -137,7 +137,6 @@ export default function Home() {
                     className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600"
                   >
                     <span>First Name</span>
-                    <span>^</span>
                   </th>
                   <th
                     scope="col"

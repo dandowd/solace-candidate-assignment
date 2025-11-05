@@ -29,6 +29,20 @@
       "when": 1762361124444,
       "tag": "0003_specialty-color",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1762380970217,
+      "tag": "0004_advocate-specialties-foreign-key",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1762382473895,
+      "tag": "0005_advocate-specialties-primary-key",
+      "breakpoints": true
     }
   ]
 }

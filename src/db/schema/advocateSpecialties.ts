@@ -19,8 +19,14 @@ const advocateSpecialties = pgTable(
 const advocateSpecialtiesRelations = relations(
   advocateSpecialties,
   ({ one }) => ({
-    advocates: one(advocates),
-    specialties: one(specialties),
+    advocates: one(advocates, {
+      fields: [advocateSpecialties.advocateId],
+      references: [advocates.id],
+    }),
+    specialties: one(specialties, {
+      fields: [advocateSpecialties.specialtyId],
+      references: [specialties.id],
+    }),
   }),
 );
 

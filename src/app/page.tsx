@@ -180,6 +180,7 @@ export default function Home() {
                           {advocate.specialties.map((s) => (
                             <span
                               key={s.name}
+                              style={{ background: s.color }}
                               className={`inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium text-indigo-700 ring-1 ring-inset`}
                             >
                               {s.name}

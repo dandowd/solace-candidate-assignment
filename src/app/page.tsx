@@ -15,7 +15,6 @@ export function formatPhone(phoneNbr: number) {
 }
 
 export default function Home() {
-  const [advocates, setAdvocates] = useState<AdvocatesResponse>([]);
   const [filteredAdvocates, setFilteredAdvocates] = useState<AdvocatesResponse>(
     [],
   );
@@ -23,17 +22,11 @@ export default function Home() {
   const [orderDirection, setOrderedDirection] = useState("asc");
   const [searchTerm, setSearchTerm] = useState<string>("");
 
-  useEffect(() => {
-    console.log("fetching advocates...");
-    getData<AdvocatesResponse>(
-      `/api/advocates?orderBy=${orderedColumn}&direction=${orderDirection}`,
-    ).then((response) => {
-      setAdvocates(response);
-      setFilteredAdvocates(response);
-    });
-  }, []);
-
-  const search = async (term: string, orderBy?: string, direction?: string) => {
+  const search = async (
+    term?: string,
+    orderBy?: string,
+    direction?: string,
+  ) => {
     try {
       const searchParam = term ? `&search=${encodeURIComponent(term)}` : "";
       const response = await getData<AdvocatesResponse>(
@@ -48,23 +41,9 @@ export default function Home() {
   // Debounced server search function (1 second)
   const debouncedSearch = useMemo(() => debounce(search, 1000), []);
 
-  useEffect(() => {
-    // Cleanup debounced calls on unmount
-    return () => debouncedSearch.cancel();
-  }, [debouncedSearch]);
-
   const onSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setSearchTerm(value);
-
-    const term = value.trim();
-    if (!term) {
-      debouncedSearch.cancel();
-      setFilteredAdvocates(advocates);
-      return;
-    }
-
-    debouncedSearch(term, orderedColumn, orderDirection);
   };
 
   const onSelectOrderBy = (column: string) => {
@@ -80,12 +59,13 @@ export default function Home() {
   };
 
   useEffect(() => {
-    search(searchTerm, orderedColumn, orderDirection);
-  }, [searchTerm, orderedColumn, orderDirection]);
+    debouncedSearch(searchTerm, orderedColumn, orderDirection);
+
+    return () => debouncedSearch.cancel();
+  }, [searchTerm, orderedColumn, orderDirection, debouncedSearch]);
 
   const onClickReset = () => {
     debouncedSearch.cancel();
-    setFilteredAdvocates(advocates);
     setSearchTerm("");
   };
 
@@ -199,10 +179,10 @@ export default function Home() {
                         <div className="flex flex-wrap gap-2">
                           {advocate.specialties.map((s) => (
                             <span
-                              key={s}
-                              className="inline-flex items-center rounded-full bg-indigo-50 px-2.5 py-1 text-xs font-medium text-indigo-700 ring-1 ring-inset ring-indigo-200"
+                              key={s.name}
+                              className={`inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium text-indigo-700 ring-1 ring-inset`}
                             >
-                              {s}
+                              {s.name}
                             </span>
                           ))}
                         </div>

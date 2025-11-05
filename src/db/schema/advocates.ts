@@ -1,14 +1,14 @@
-import { sql } from "drizzle-orm";
+import { relations, sql } from "drizzle-orm";
 import {
   pgTable,
   integer,
   text,
-  jsonb,
   serial,
   timestamp,
   bigint,
   index,
 } from "drizzle-orm/pg-core";
+import { advocateSpecialties } from "./advocateSpecialties";
 
 const advocates = pgTable(
   "advocates",
@@ -18,23 +18,12 @@ const advocates = pgTable(
     lastName: text("last_name").notNull(),
     city: text("city").notNull(),
     degree: text("degree").notNull(),
-    specialties: jsonb("payload").$type<string[]>().default([]).notNull(),
     yearsOfExperience: integer("years_of_experience").notNull(),
     phoneNumber: bigint("phone_number", { mode: "number" }).notNull(),
     createdAt: timestamp("created_at").default(sql`CURRENT_TIMESTAMP`),
     search: text("search").generatedAlwaysAs(
-      `first_name || ' ' || last_name || ' ' || city || ' ' ||
-     coalesce(
-       trim(
-         regexp_replace(
-           regexp_replace((payload)::text, '\\[|\\]|"', '', 'g'),
-           ',',
-           ' ',
-           'g'
-         )
-       ),
-       ''
-     ) || ' ' || degree || ' ' || years_of_experience || ' ' || phone_number`,
+      `first_name || ' ' || last_name || ' ' || city || ' ' 
+        || ' ' || degree || ' ' || years_of_experience || ' ' || phone_number`,
     ),
   },
   (table) => {
@@ -47,4 +36,8 @@ const advocates = pgTable(
   },
 );
 
-export { advocates };
+const advocatesRelations = relations(advocates, ({ many }) => ({
+  advocateSpecialties: many(advocateSpecialties),
+}));
+
+export { advocates, advocatesRelations };

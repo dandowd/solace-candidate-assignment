@@ -22,6 +22,13 @@
       "when": 1758736994200,
       "tag": "0002_advocates-search-field",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1762361124444,
+      "tag": "0003_specialty-color",
+      "breakpoints": true
     }
   ]
 }

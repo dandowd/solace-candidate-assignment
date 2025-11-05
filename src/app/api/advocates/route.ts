@@ -23,12 +23,21 @@ export async function GET(req: NextRequest) {
     baseQuery.orderBy(directionFunc(orderMap[orderBy]));
   }
 
-  if (searchParams.has("search")) {
+  if (searchTerm) {
     baseQuery.where(ilike(advocates.search, `%${searchTerm}%`));
   }
 
   // In a real system we would probably have a promoted flag and we would default to the promoted advocates for an area
-  const data = await baseQuery;
+  const advocatesResults = await baseQuery;
+  const data = advocatesResults.map((a) => {
+    return {
+      ...a,
+      specialties: a.specialties.map((s) => ({
+        color: "#F54927",
+        name: s,
+      })),
+    };
+  });
 
   return Response.json({ data });
 }

@@ -26,9 +26,16 @@ async function main() {
 
     for (const advocate of inserted) {
       const specialtyIndex = Math.floor(Math.random() * specialtyData.length);
+      const specialtyIndex2 = Math.floor(Math.random() * specialtyData.length);
+
       await db.insert(advocateSpecialties).values({
         advocateId: advocate.id,
         specialtyId: insertedSpecialties[specialtyIndex].id,
+      });
+
+      await db.insert(advocateSpecialties).values({
+        advocateId: advocate.id,
+        specialtyId: insertedSpecialties[specialtyIndex2].id,
       });
     }
 

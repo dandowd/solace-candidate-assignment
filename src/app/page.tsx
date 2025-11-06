@@ -98,7 +98,7 @@ export default function Home() {
             </label>
             <input
               id="search"
-              placeholder="Search by name, city, degree, or specialty..."
+              placeholder="Search by name, city, degree..."
               className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-gray-900 placeholder:text-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 sm:max-w-md"
               onChange={onSearchChange}
               value={searchTerm}

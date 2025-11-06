@@ -42,27 +42,34 @@ export default function Home() {
   const debouncedSearch = useMemo(() => debounce(search, 1000), []);
 
   const onSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
+    debouncedSearch.cancel();
+
     const value = e.target.value;
     setSearchTerm(value);
+
+    debouncedSearch(searchTerm, orderedColumn, orderDirection);
   };
 
   const onSelectOrderBy = (column: string) => {
+    let direction = orderDirection;
     if (column === orderedColumn) {
       if (orderDirection === "asc") {
+        direction = "desc";
         setOrderedDirection("desc");
       } else {
+        direction = "asc";
         setOrderedDirection("asc");
       }
     } else {
       setOrderedColumn(column);
     }
+
+    search(searchTerm, column, direction);
   };
 
   useEffect(() => {
-    debouncedSearch(searchTerm, orderedColumn, orderDirection);
-
-    return () => debouncedSearch.cancel();
-  }, [searchTerm, orderedColumn, orderDirection, debouncedSearch]);
+    search(searchTerm, orderedColumn, orderDirection);
+  }, []);
 
   const onClickReset = () => {
     debouncedSearch.cancel();

@@ -38,6 +38,7 @@ export async function GET(req: NextRequest) {
       },
     },
   });
+
   const data = advocatesResults.map(({ advocateSpecialties, ...rest }) => ({
     ...rest,
     specialties: advocateSpecialties.flatMap((as) => ({

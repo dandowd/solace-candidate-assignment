@@ -47,7 +47,7 @@ export default function Home() {
     const value = e.target.value;
     setSearchTerm(value);
 
-    debouncedSearch(searchTerm, orderedColumn, orderDirection);
+    debouncedSearch(value, orderedColumn, orderDirection);
   };
 
   const onSelectOrderBy = (column: string) => {
@@ -74,6 +74,7 @@ export default function Home() {
   const onClickReset = () => {
     debouncedSearch.cancel();
     setSearchTerm("");
+    search("", orderedColumn, orderDirection);
   };
 
   return (

@@ -1,8 +1,10 @@
+import dbConfig from "./src/db/dbConfig";
+
 const config = {
   dialect: "postgresql",
-  schema: "./src/db/schema.ts",
+  schema: "./src/db/schema",
   dbCredentials: {
-    url: process.env.DATABASE_URL,
+    url: dbConfig.databaseUrl,
   },
   verbose: true,
   strict: true,

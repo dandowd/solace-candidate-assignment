@@ -1,0 +1,48 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1758671744137,
+      "tag": "0000_create-advocates-table",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1758684147933,
+      "tag": "0001_add-pg-trgm",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1758736994200,
+      "tag": "0002_advocates-search-field",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1762361124444,
+      "tag": "0003_specialty-color",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1762380970217,
+      "tag": "0004_advocate-specialties-foreign-key",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1762382473895,
+      "tag": "0005_advocate-specialties-primary-key",
+      "breakpoints": true
+    }
+  ]
+}
